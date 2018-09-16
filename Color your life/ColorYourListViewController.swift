@@ -10,7 +10,7 @@ import UIKit
 
 class ColorYourListViewController: UITableViewController {
     
-    let itemArray = ["Find ","Buy Eggos","Destory"]
+    var itemArray = ["Find ","Buy Eggos","Destory"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,14 +36,37 @@ class ColorYourListViewController: UITableViewController {
         
         
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-             tableView.cellForRow(at: indexPath)?.accessoryType == .none
+             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
+    
+    //MARK - Add New Items
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            // What will happen once the user clicks the ass item button on our UIAlert
+       self.itemArray.append(textField.text!)
+            self.tableView.reloadData()
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+        }
+            alert.addAction(action)
+        present(alert, animated:  true, completion: nil)
+  
+    }
+    
 
 }
 
