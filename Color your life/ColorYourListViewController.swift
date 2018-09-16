@@ -11,10 +11,15 @@ import UIKit
 class ColorYourListViewController: UITableViewController {
     
     var itemArray = ["Find ","Buy Eggos","Destory"]
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = UserDefaults.standard.array(forKey: "ColorListArray") as? [String] {
+            itemArray = items
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,6 +60,7 @@ class ColorYourListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What will happen once the user clicks the ass item button on our UIAlert
        self.itemArray.append(textField.text!)
+            self.defaults.set(self.itemArray, forKey: "ColorListArray")
             self.tableView.reloadData()
         }
         
