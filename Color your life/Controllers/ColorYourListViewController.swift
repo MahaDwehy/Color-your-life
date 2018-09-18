@@ -10,14 +10,27 @@ import UIKit
 
 class ColorYourListViewController: UITableViewController {
     
-    var itemArray = ["Find ","Buy Eggos","Destory"]
+    var itemArray = [Item]()
     let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        if let items = UserDefaults.standard.array(forKey: "ColorListArray") as? [String] {
+        let newItem = Item()
+        newItem.title = "Find Mike"
+        itemArray.append(newItem)
+        
+        let newItem2 = Item()
+        newItem2.title = "Maha"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "Dwehy"
+        itemArray.append(newItem3)
+        
+        
+        if let items = UserDefaults.standard.array(forKey: "ColorListArray") as? [Item] {
             itemArray = items
         }
     }
@@ -31,21 +44,20 @@ class ColorYourListViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ColorItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        cell.textLabel?.text = item.title
         
+        cell.accessoryType = item.done == true ? .checkmark : .none
+       
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(indexPath.row)
+//        print(itemArray[indexPath.row])
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-             tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-        
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -59,7 +71,10 @@ class ColorYourListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What will happen once the user clicks the ass item button on our UIAlert
-       self.itemArray.append(textField.text!)
+            
+            let newItem = Item()
+            newItem.title = textField.text!
+       self.itemArray.append(newItem)
             self.defaults.set(self.itemArray, forKey: "ColorListArray")
             self.tableView.reloadData()
         }
